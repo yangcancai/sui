@@ -1,0 +1,20 @@
+[package]
+name = "sui"
+version = "0.1.0"
+authors = ["Cam <yangcancai0112@gmail.com>"]
+license = "MIT/Apache-2.0 2021"
+build = "build.rs"
+
+[lib]
+name = "sui"
+crate-type = ["cdylib","rlib"]
+
+[[bench]]
+name = "bench"
+harness = false
+
+[dependencies]
+rustler = "0.26.0"
+serde = { version = "1.0", features = ["derive"] }
+bencher = "0.1.5"
+sui-keys={path="../sui-keys"}
