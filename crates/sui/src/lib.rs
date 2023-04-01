@@ -33,7 +33,8 @@ mod nif;
 rustler::init!(
     "sui_nif",
     [
-        nif::new
+        nif::new,
+        nif::sign
     ],
     load = nif::on_load
 );

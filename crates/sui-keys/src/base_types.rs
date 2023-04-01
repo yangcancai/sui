@@ -5,6 +5,7 @@
 use anyhow::anyhow;
 use fastcrypto::ed25519::Ed25519PublicKey;
 use fastcrypto::secp256k1::Secp256k1PublicKey;
+use fastcrypto::secp256r1::Secp256r1PublicKey;
 use rand::Rng;
 use serde::de::Error;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -83,19 +84,19 @@ impl From<&Secp256k1PublicKey> for SuiAddress {
     }
 }
 
-// impl From<&Secp256r1PublicKey> for SuiAddress {
-//     fn from(pk: &Secp256r1PublicKey) -> Self {
-//         let mut hasher = Sha3_256::default();
-//         hasher.update([SignatureScheme::Secp256r1.flag()]);
-//         hasher.update(pk);
-//         let g_arr = hasher.finalize();
+impl From<&Secp256r1PublicKey> for SuiAddress {
+    fn from(pk: &Secp256r1PublicKey) -> Self {
+        let mut hasher = Sha3_256::default();
+        hasher.update([SignatureScheme::Secp256r1.flag()]);
+        hasher.update(pk);
+        let g_arr = hasher.finalize();
 
-//         let mut res = [0u8; SUI_ADDRESS_LENGTH];
-//         // OK to access slice because Sha3_256 should never be shorter than SUI_ADDRESS_LENGTH.
-//         res.copy_from_slice(&AsRef::<[u8]>::as_ref(&g_arr)[..SUI_ADDRESS_LENGTH]);
-//         SuiAddress(res)
-//     }
-// }
+        let mut res = [0u8; SUI_ADDRESS_LENGTH];
+        // OK to access slice because Sha3_256 should never be shorter than SUI_ADDRESS_LENGTH.
+        res.copy_from_slice(&AsRef::<[u8]>::as_ref(&g_arr)[..SUI_ADDRESS_LENGTH]);
+        SuiAddress(res)
+    }
+}
 // impl<T: SuiPublicKey> From<&T> for SuiAddress {
 //     fn from(pk: &T) -> Self {
 //         let mut hasher = Sha3_256::default();

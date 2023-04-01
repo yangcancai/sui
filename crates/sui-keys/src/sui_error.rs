@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use strum_macros::{AsRefStr, IntoStaticStr};
 use thiserror::Error;
+
+// pub type SuiResult<T = ()> = Result<T, SuiError>;
 /// Custom error type for Sui.
 #[derive(
     Eq, PartialEq, Clone, Debug, Serialize, Deserialize, Error, Hash, AsRefStr, IntoStaticStr,
