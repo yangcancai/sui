@@ -3,6 +3,8 @@
 
 use anyhow::anyhow;
 use bip32::{ChildNumber, DerivationPath, Mnemonic, XPrv};
+use fastcrypto::secp256r1::{Secp256r1KeyPair, Secp256r1PrivateKey};
+use fastcrypto::traits::EncodeDecodeBase64;
 
 use crate::base_types::SuiAddress;
 use crate::crypto::{SignatureScheme, SuiKeyPair};
@@ -52,16 +54,16 @@ pub fn derive_key_pair_from_path(
             );
             Ok((kp.public().into(), SuiKeyPair::Secp256k1(kp)))
         }
-        // SignatureScheme::Secp256r1 => {
-        //     let child_xprv = XPrv::derive_from_path(seed, &path)
-        //         .map_err(|e| SuiError::SignatureKeyGenError(e.to_string()))?;
-        //     let kp = Secp256r1KeyPair::from(
-        //         Secp256r1PrivateKey::from_bytes(child_xprv.private_key().to_bytes().as_slice())
-        //             .map_err(|e| SuiError::SignatureKeyGenError(e.to_string()))?,
-        //     );
-        //     Ok((kp.public().into(), SuiKeyPair::Secp256r1(kp)))
-        // }
-        SignatureScheme::BLS12381 | SignatureScheme::MultiSig | SignatureScheme::Secp256r1 => {
+        SignatureScheme::Secp256r1 => {
+            let child_xprv = XPrv::derive_from_path(seed, &path)
+                .map_err(|e| SuiError::SignatureKeyGenError(e.to_string()))?;
+            let kp = Secp256r1KeyPair::from(
+                Secp256r1PrivateKey::from_bytes(child_xprv.private_key().to_bytes().as_slice())
+                    .map_err(|e| SuiError::SignatureKeyGenError(e.to_string()))?,
+            );
+            Ok((kp.public().into(), SuiKeyPair::Secp256r1(kp)))
+        }
+        SignatureScheme::BLS12381 | SignatureScheme::MultiSig=> {
             Err(SuiError::UnsupportedFeatureError {
                 error: format!("key derivation not supported {:?}", key_scheme),
             })

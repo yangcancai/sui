@@ -23,7 +23,7 @@
 //-------------------------------------------------------------------
 
 use rustler::{Binary, Encoder, Env, NifResult, OwnedBinary, Term};
-
+use std::borrow::Cow;
 use atoms::{ok,error};
 use options::NifsuiOptions;
 use sui_keys::{crypto::SignatureScheme, key_derive::generate_new_key1};
@@ -51,6 +51,22 @@ fn new<'a>(env: Env<'a>, opts: NifsuiOptions) -> NifResult<Term<'a>> {
         }
         Err(_e) => { Ok(error().encode(env)) }
         }
+}
+fn u8_to_string(msg: &[u8]) -> String{
+    let a = String::from_utf8_lossy(msg);
+    match a{
+        Cow::Owned(own_msg) => own_msg,
+        Cow::Borrowed(b_msg) => b_msg.to_string()
+    }
+}
+#[rustler::nif]
+fn sign<'a>(env: Env<'a>, tx_bytes: LazyBinary<'a>, secret: LazyBinary<'a>) -> NifResult<Term<'a>> {
+   match sui_keys::crypto::sign(&tx_bytes, u8_to_string(&secret).as_str()){
+       Ok(res) =>{
+           Ok((ok(), res).encode(env))
+       },
+       Err(_e) => { Ok(error().encode(env)) }
+   }
 }
 // =================================================================================================
 // helpers

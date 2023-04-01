@@ -23,6 +23,7 @@ strum_macros = "^0.24"
 derive_more = "0.99.17"
 eyre = "0.6.8"
 strum = "^0.24"
+enum_dispatch = "^0.3"
 
 
 [dev-dependencies]
