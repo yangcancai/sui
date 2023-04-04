@@ -13,13 +13,13 @@ use std::marker::PhantomData;
 use serde_with::{DeserializeAs, SerializeAs};
 use crate::crypto::{SignatureScheme};
 use fastcrypto::encoding::{Encoding, Hex};
-use fastcrypto::hash::{HashFunction, Sha3_256};
+use fastcrypto::hash::{HashFunction, Blake2b256};
 
-pub const SUI_ADDRESS_LENGTH: usize = 20;
+pub const SUI_ADDRESS_LENGTH: usize = 32;
 use schemars::JsonSchema;
 // use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
-
+pub type DefalutHash = Blake2b256;
 #[serde_as]
 #[derive(
     Eq, Default, PartialEq, Ord, PartialOrd, Copy, Clone, Hash, Serialize, Deserialize, JsonSchema,
@@ -58,7 +58,7 @@ impl SuiAddress {
 
 impl From<&Ed25519PublicKey> for SuiAddress {
     fn from(pk: &Ed25519PublicKey) -> Self {
-        let mut hasher = Sha3_256::default();
+        let mut hasher = DefalutHash::default();
         hasher.update([SignatureScheme::ED25519.flag()]);
         hasher.update(pk);
         let g_arr = hasher.finalize();
@@ -72,7 +72,7 @@ impl From<&Ed25519PublicKey> for SuiAddress {
 
 impl From<&Secp256k1PublicKey> for SuiAddress {
     fn from(pk: &Secp256k1PublicKey) -> Self {
-        let mut hasher = Sha3_256::default();
+        let mut hasher = DefalutHash::default();
         hasher.update([SignatureScheme::Secp256k1.flag()]);
         hasher.update(pk);
         let g_arr = hasher.finalize();
@@ -86,7 +86,7 @@ impl From<&Secp256k1PublicKey> for SuiAddress {
 
 impl From<&Secp256r1PublicKey> for SuiAddress {
     fn from(pk: &Secp256r1PublicKey) -> Self {
-        let mut hasher = Sha3_256::default();
+        let mut hasher = DefalutHash::default();
         hasher.update([SignatureScheme::Secp256r1.flag()]);
         hasher.update(pk);
         let g_arr = hasher.finalize();
