@@ -29,7 +29,7 @@ new(_Opts) ->
 sign(_TxBytes, _Secret) ->
    not_loaded(?LINE).
 
--spec account_detail(Secret :: binary()) -> {ok, list()} | error.
+-spec account_detail(Secret :: binary()) -> {ok, tuple()} | error.
 account_detail(_Secret) ->
    not_loaded(?LINE).
  
