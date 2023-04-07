@@ -3,17 +3,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use anyhow::anyhow;
-use fastcrypto::ed25519::Ed25519PublicKey;
+use fastcrypto::ed25519::{Ed25519PublicKey};
 use fastcrypto::secp256k1::Secp256k1PublicKey;
 use fastcrypto::secp256r1::Secp256r1PublicKey;
+use fastcrypto::traits::KeyPair;
 use rand::Rng;
 use serde::de::Error;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::marker::PhantomData;
 use serde_with::{DeserializeAs, SerializeAs};
-use crate::crypto::{SignatureScheme};
+use crate::crypto::{SignatureScheme, SuiKeyPair};
 use fastcrypto::encoding::{Encoding, Hex};
 use fastcrypto::hash::{HashFunction, Blake2b256};
+use eyre::eyre;
 
 pub const SUI_ADDRESS_LENGTH: usize = 32;
 use schemars::JsonSchema;
@@ -53,6 +55,18 @@ impl SuiAddress {
     }
     pub fn to_inner(self) -> [u8; SUI_ADDRESS_LENGTH] {
         self.0
+    }
+    pub fn decode(str: &str) -> Result<Self, eyre::Report>{
+        let d = Hex::decode(str)?;
+        let mut res = Self::ZERO;
+        if d.len() == res.0.len(){
+        for i in 0..d.len(){
+            res.0[i] = d[i];
+        }
+        Ok(res)
+    }else{
+        Err(eyre!("The sui_address length no match!!"))
+    }
     }
 }
 
@@ -97,20 +111,21 @@ impl From<&Secp256r1PublicKey> for SuiAddress {
         SuiAddress(res)
     }
 }
-// impl<T: SuiPublicKey> From<&T> for SuiAddress {
-//     fn from(pk: &T) -> Self {
-//         let mut hasher = Sha3_256::default();
-//         hasher.update([T::SIGNATURE_SCHEME.flag()]);
-//         hasher.update(pk);
-//         let g_arr = hasher.finalize();
+impl  From<&SuiKeyPair> for SuiAddress {
+    fn from(pk: &SuiKeyPair) -> Self {
+        match pk{
+           SuiKeyPair::Ed25519(k) => k.public().into(),
+           SuiKeyPair::Secp256k1(k) => k.public().into(),
+           SuiKeyPair::Secp256r1(k) => k.public().into()
 
-//         let mut res = [0u8; SUI_ADDRESS_LENGTH];
-//         // OK to access slice because Sha3_256 should never be shorter than SUI_ADDRESS_LENGTH.
-//         res.copy_from_slice(&AsRef::<[u8]>::as_ref(&g_arr)[..SUI_ADDRESS_LENGTH]);
-//         SuiAddress(res)
-//     }
-// }
-
+        }
+    }
+}
+impl From<&SuiAddress> for String{
+    fn from(addr: &SuiAddress) -> Self {
+        format!("0x{}",Hex::encode(addr))
+    }
+}
 impl AsRef<[u8]> for SuiAddress {
     fn as_ref(&self) -> &[u8] {
         &self.0[..]

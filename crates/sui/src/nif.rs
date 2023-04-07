@@ -68,6 +68,24 @@ fn sign<'a>(env: Env<'a>, tx_bytes: LazyBinary<'a>, secret: LazyBinary<'a>) -> N
        Err(_e) => { Ok(error().encode(env)) }
    }
 }
+#[rustler::nif]
+fn account_detail<'a>(env: Env<'a>, key: LazyBinary<'a>) -> NifResult<Term<'a>> {
+   match sui_keys::crypto::account_detail(u8_to_string(&key).as_str()){
+       Ok((bin_public, public, bin_secret, secret)) =>{
+           Ok((ok(), (u8_to_string(&bin_public), public, u8_to_string(&bin_secret), secret)).encode(env))
+       },
+       Err(_e) => { Ok(error().encode(env)) }
+   }
+}
+#[rustler::nif]
+fn decode_pub<'a>(env: Env<'a>, public: LazyBinary<'a>) -> NifResult<Term<'a>> {
+   match sui_keys::crypto::decode_pub(u8_to_string(&public).as_str()){
+       Ok(res) =>{
+           Ok((ok(), u8_to_string(&res)).encode(env))
+       },
+       Err(_e) => { Ok(error().encode(env)) }
+   }
+}
 // =================================================================================================
 // helpers
 // =================================================================================================

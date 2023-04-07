@@ -111,6 +111,25 @@ impl SuiKeyPair {
             SuiKeyPair::Secp256r1(kp) => PublicKey::Secp256r1(kp.public().clone()),
         }
     }
+  pub fn as_vec(&self) -> Vec<u8> {
+      let mut bytes: Vec<u8> = Vec::new();
+        match self {
+            SuiKeyPair::Ed25519(kp) => {
+                bytes.push(self.public().flag());
+                bytes.extend_from_slice(kp.as_bytes());
+            }
+            SuiKeyPair::Secp256k1(kp) => {
+                bytes.push(self.public().flag());
+                bytes.extend_from_slice(kp.as_bytes());
+            }
+            SuiKeyPair::Secp256r1(kp) => {
+                bytes.push(self.public().flag());
+                bytes.extend_from_slice(kp.as_bytes());
+            }
+        }
+        bytes
+    }
+
 }
 impl FromStr for SuiKeyPair {
     type Err = eyre::Report;
@@ -120,7 +139,6 @@ impl FromStr for SuiKeyPair {
         Ok(kp)
     }
 }
-
 impl EncodeDecodeBase64 for SuiKeyPair {
     /// Encode a SuiKeyPair as `flag || privkey` in Base64. Note that the pubkey is not encoded.
     fn encode_base64(&self) -> String {
@@ -620,4 +638,13 @@ pub fn sign(tx_bytes: &[u8], secret: &str) -> Result<Vec<String>, eyre::Report>{
     let keypair = SuiKeyPair::decode_base64(secret)?;
     let signature = keypair.sign(tx_bytes);
      Ok(signature.signatures())
+}
+pub fn account_detail(secret: &str) -> Result<(Vec<u8>, String, Vec<u8>, String),eyre::Report>{
+    let keypair = SuiKeyPair::decode_base64(secret)?;
+    let addr = SuiAddress::from(&keypair);
+    Ok((addr.to_vec(), String::from(&addr), keypair.as_vec(), secret.into()))
+}
+pub fn decode_pub(public: &str) -> Result<Vec<u8>, eyre::Report>{
+    let addr: SuiAddress= SuiAddress::decode(&public[2..])?;
+    Ok(addr.to_vec())
 }

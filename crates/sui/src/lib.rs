@@ -34,7 +34,9 @@ rustler::init!(
     "sui_nif",
     [
         nif::new,
-        nif::sign
+        nif::sign,
+        nif::account_detail,
+        nif::decode_pub
     ],
     load = nif::on_load
 );

@@ -4,8 +4,11 @@
 -export([
     new/0,  %% new resource
     new/1,
-    sign/2
+    sign/2,
+    account_detail/1,
+    decode_pub/1
 ]).
+
 %% Native library support
 -export([load/0]).
 
@@ -25,6 +28,15 @@ new(_Opts) ->
 -spec sign(TxBytes :: binary(), Secret :: binary()) -> {ok, list()} | error.
 sign(_TxBytes, _Secret) ->
    not_loaded(?LINE).
+
+-spec account_detail(Secret :: binary()) -> {ok, list()} | error.
+account_detail(_Secret) ->
+   not_loaded(?LINE).
+ 
+-spec decode_pub(Public:: binary()) -> {ok, binary()} | error.
+decode_pub(_Secret) ->
+   not_loaded(?LINE).
+   
 
 %% @private
 load() ->

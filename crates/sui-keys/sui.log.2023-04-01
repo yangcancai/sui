@@ -1,0 +1,22 @@
+2023-04-01T08:27:20.795982Z  INFO sui::client_commands: Showing 10 results.
+2023-04-01T08:27:20.796085Z  INFO sui::client_commands: 0x0243a9623b99552b35e2a6aea3ec0a40f607a04f
+2023-04-01T08:27:20.796098Z  INFO sui::client_commands: 0x258d437e5dd96463bbd0293d1945ba8f819c05f5
+2023-04-01T08:27:20.796105Z  INFO sui::client_commands: 0x2617955e0a5c55514f03290f3f89a3202f0808c6 <=
+2023-04-01T08:27:20.796111Z  INFO sui::client_commands: 0x31098d1a04a6170ca37042786d964d9412fbb3ac
+2023-04-01T08:27:20.796118Z  INFO sui::client_commands: 0x42a81d3a9f295c48efe6ba1ec48b561757c00765
+2023-04-01T08:27:20.796124Z  INFO sui::client_commands: 0x4422241d7c081c71a408d85e9cb4d1b669fc6dca
+2023-04-01T08:27:20.796130Z  INFO sui::client_commands: 0x5d106d751fc2fdfb97989da312a92b46c9b2892c
+2023-04-01T08:27:20.796136Z  INFO sui::client_commands: 0x6fb6e0e0f3e23cc2bc82990bdf00c21316402f30
+2023-04-01T08:27:20.796142Z  INFO sui::client_commands: 0xe05563e3a9a5b39e8a54ea52d418cfd66ef8a192
+2023-04-01T08:27:20.796149Z  INFO sui::client_commands: 0xeeef163de5ecf4ebbf9873eb61ab375b76ac7d20
+2023-04-01T08:27:24.834520Z  INFO sui::client_commands: 0x2617955e0a5c55514f03290f3f89a3202f0808c6
+2023-04-01T08:27:55.793452Z  INFO sui::client_commands:                  Object ID                  |  Gas Value 
+2023-04-01T08:27:55.793557Z  INFO sui::client_commands: ----------------------------------------------------------------------
+2023-04-01T08:27:55.793624Z  INFO sui::client_commands:  0x0f3cb9b996de15efca5f98d47fd10789bb56d86d | 99999999999686
+2023-04-01T08:27:55.793629Z  INFO sui::client_commands:  0x1f6ff36236d54b056c1821728b6df7c2484f6b85 | 100000000000000
+2023-04-01T08:27:55.793632Z  INFO sui::client_commands:  0x3b9192befc95c55016df6e7ac9a13959aaed6970 |    99072   
+2023-04-01T08:27:55.793635Z  INFO sui::client_commands:  0x68fcb5add3e465a1aabefe7faba1b6187c5a4f2d | 100000000000000
+2023-04-01T08:27:55.793637Z  INFO sui::client_commands:  0x94e102543a5ad2076ba67b7f23f21ca430935c2b |   100000   
+2023-04-01T08:27:55.793640Z  INFO sui::client_commands:  0x97f10908ccca4bc20321d8ee0b88211d8d51deb1 | 99999999998336
+2023-04-01T08:27:55.793642Z  INFO sui::client_commands:  0x9a22b05617eeb9912e664aa2af16cb5082ae71da |   100000   
+2023-04-01T08:27:55.793645Z  INFO sui::client_commands:  0xc16fede55e74d21f2ad66257cd0b2809cb7181e3 |   100000   

@@ -62,4 +62,9 @@ del_meck() ->
 handle(_Config) ->
     expect(),
     ?assertEqual({ok, 1}, sui:test()),
+    {ok, {Public, Secret, _,_}} = sui_nif:new(),
+    {ok, {BinPub, Public, _BinSecret, Secret}} = sui_nif:account_detail(Secret),
+    {ok, BinPub1} = sui_nif:decode_pub(Public),
+    ?assertEqual(BinPub, BinPub1),
+    ?assertEqual(erlang:is_binary(BinPub), true),
     ok.

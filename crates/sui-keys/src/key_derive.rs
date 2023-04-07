@@ -15,9 +15,6 @@ use fastcrypto::{
     secp256k1::{Secp256k1KeyPair, Secp256k1PrivateKey},
     traits::{KeyPair, ToFromBytes},
 };
-use fastcrypto::encoding::Hex;
-use fastcrypto::encoding::Encoding;
-
 use signature::rand_core::OsRng;
 use slip10_ed25519::derive_ed25519_private_key;
 
@@ -175,7 +172,9 @@ pub fn generate_new_key1(
     let mnemonic = Mnemonic::random(OsRng, Default::default());
     let seed = mnemonic.to_seed("");
     match derive_key_pair_from_path(seed.as_bytes(), derivation_path, &key_scheme) {
-        Ok((address, kp)) => Ok((format!("0x{}",Hex::encode(address)), kp.encode_base64(), key_scheme.to_string(), mnemonic.phrase().to_string())),
+        Ok((address, kp)) => 
+        {
+        Ok((String::from(&address), kp.encode_base64(), key_scheme.to_string(), mnemonic.phrase().to_string()))}
         Err(e) => Err(anyhow!("Failed to generate keypair: {:?}", e)),
     }
 }
