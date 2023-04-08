@@ -59,6 +59,13 @@ fn u8_to_string(msg: &[u8]) -> String{
         Cow::Borrowed(b_msg) => b_msg.to_string()
     }
 }
+use std::io::Write;
+fn encode_bytes<'a>(env: Env<'a>, inner: &[u8]) -> Term<'a>{
+    let mut binary = OwnedBinary::new(inner.len()).unwrap();
+    binary.as_mut_slice().write_all(inner).unwrap();
+    binary.release(env).encode(env)
+}
+
 #[rustler::nif]
 fn sign<'a>(env: Env<'a>, tx_bytes: LazyBinary<'a>, secret: LazyBinary<'a>) -> NifResult<Term<'a>> {
    match sui_keys::crypto::sign(&tx_bytes, u8_to_string(&secret).as_str()){
@@ -72,7 +79,9 @@ fn sign<'a>(env: Env<'a>, tx_bytes: LazyBinary<'a>, secret: LazyBinary<'a>) -> N
 fn account_detail<'a>(env: Env<'a>, key: LazyBinary<'a>) -> NifResult<Term<'a>> {
    match sui_keys::crypto::account_detail(u8_to_string(&key).as_str()){
        Ok((bin_public, public, bin_secret, secret)) =>{
-           Ok((ok(), (u8_to_string(&bin_public), public, u8_to_string(&bin_secret), secret)).encode(env))
+           Ok((ok(), (encode_bytes(env, bin_public.as_ref()),
+            public, 
+            encode_bytes(env, bin_secret.as_ref()), secret)).encode(env))
        },
        Err(_e) => { Ok(error().encode(env)) }
    }
@@ -81,7 +90,7 @@ fn account_detail<'a>(env: Env<'a>, key: LazyBinary<'a>) -> NifResult<Term<'a>> 
 fn decode_pub<'a>(env: Env<'a>, public: LazyBinary<'a>) -> NifResult<Term<'a>> {
    match sui_keys::crypto::decode_pub(u8_to_string(&public).as_str()){
        Ok(res) =>{
-           Ok((ok(), u8_to_string(&res)).encode(env))
+           Ok((ok(), encode_bytes(env, res.as_ref())).encode(env))
        },
        Err(_e) => { Ok(error().encode(env)) }
    }
