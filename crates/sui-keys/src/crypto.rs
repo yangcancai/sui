@@ -411,10 +411,14 @@ impl Debug for Signature {
 }
 impl Signature{
     pub fn signatures(&self) -> Vec<String>{
-       let flag = Base64::encode([self.scheme().flag()]);
-        let s = Base64::encode(self.signature_bytes());
-        let p = Base64::encode(self.public_key_bytes());
-        vec![flag, s, p]
+        let mut res = vec![];
+       let flag = self.scheme().flag();
+       res.extend_from_slice(&[flag]);
+       let s = self.signature_bytes();
+       res.extend_from_slice(s);
+       let p = self.public_key_bytes();
+       res.extend_from_slice(p);
+       vec![Base64::encode(res)]
     }
 }
 

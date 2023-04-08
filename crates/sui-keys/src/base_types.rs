@@ -60,9 +60,7 @@ impl SuiAddress {
         let d = Hex::decode(str)?;
         let mut res = Self::ZERO;
         if d.len() == res.0.len(){
-        for i in 0..d.len(){
-            res.0[i] = d[i];
-        }
+        res.0[..d.len()].copy_from_slice(&d[..]);
         Ok(res)
     }else{
         Err(eyre!("The sui_address length no match!!"))
