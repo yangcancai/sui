@@ -7,6 +7,7 @@ use fastcrypto::bls12381::min_sig::{
 };
 use fastcrypto::ed25519::{Ed25519KeyPair, Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
 use fastcrypto::error::FastCryptoError;
+use fastcrypto::hash::{Blake2b256, HashFunction};
 use fastcrypto::secp256k1::{Secp256k1KeyPair, Secp256k1PublicKey, Secp256k1Signature};
 use fastcrypto::secp256r1::{Secp256r1KeyPair, Secp256r1PublicKey, Secp256r1Signature};
 pub use fastcrypto::traits::KeyPair as KeypairTraits;
@@ -640,7 +641,11 @@ pub trait SuiSignatureInner: Sized + ToFromBytes + PartialEq + Eq + Hash {
 }
 pub fn sign(tx_bytes: &[u8], secret: &str) -> Result<Vec<String>, eyre::Report>{
     let keypair = SuiKeyPair::decode_base64(secret)?;
-    let signature = keypair.sign(tx_bytes);
+    let mut hasher = Blake2b256::default();
+    hasher.update(tx_bytes);
+    let g_arr = hasher.finalize();
+
+    let signature = keypair.sign(AsRef::<[u8]>::as_ref(&g_arr));
      Ok(signature.signatures())
 }
 pub fn account_detail(secret: &str) -> Result<(Vec<u8>, String, Vec<u8>, String),eyre::Report>{
