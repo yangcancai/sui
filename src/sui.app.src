@@ -12,6 +12,6 @@
 
   {licenses, ["Apache 2.0"]},
   {links, [{"GitHub", "https://github.com/yangcancai/sui.git"}]},
-  {files,["crates",".cargo","config", "include", "src", "priv", "test", "doc", ".github"]}
+  {files,["crates",".cargo","config", "include", "src", "priv", "test", "doc", ".github",".gitignore","Makefile","LICENSE","README.md","rebar.config","rebar.lock","rebar3","tool.sh"]}
  ]}.
 
