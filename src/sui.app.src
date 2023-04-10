@@ -1,5 +1,5 @@
 {application, sui,
- [{description, "An OTP application"},
+ [{description, "An sui nif to create account for sui block chain"},
   {vsn, "0.1.0"},
   {registered, []},
   {mod, {sui_app, []}},
@@ -11,6 +11,7 @@
   {modules, []},
 
   {licenses, ["Apache 2.0"]},
-  {links, []}
+  {links, [{"GitHub", "https://github.com/yangcancai/sui.git"}]},
+  {files,["crates",".cargo"]}
  ]}.
 
