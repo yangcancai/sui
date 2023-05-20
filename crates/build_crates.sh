@@ -17,7 +17,7 @@ else
 fi
 build(){
     mkdir -p ./priv
-    $/HOME/.cargo/bin/cargo build --manifest-path=crates/sui/Cargo.toml --release
+    $HOME/.cargo/bin/cargo build --manifest-path=crates/sui/Cargo.toml --release
     sh -c "cp $(cat crates/sui/libpath) ./priv/libsui.so "
 }
 test(){
