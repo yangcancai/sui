@@ -8,16 +8,16 @@ cmd_exists(){
 	fi
 	return 1
 }
-cmd_exists cargo
+cmd_exists $HOME/.caro/bin/cargo
 if [ $? -eq '0' ]; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source $HOME/.cargo/env
+    #source $HOME/.cargo/env
 else
     echo "Rust already install."
 fi
 build(){
     mkdir -p ./priv
-    cargo build --manifest-path=crates/sui/Cargo.toml --release
+    $/HOME/.cargo/bin/cargo build --manifest-path=crates/sui/Cargo.toml --release
     sh -c "cp $(cat crates/sui/libpath) ./priv/libsui.so "
 }
 test(){
